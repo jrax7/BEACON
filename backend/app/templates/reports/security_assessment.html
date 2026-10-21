@@ -1,0 +1,1148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>
+    {{ report_title }} — {{ target.hostname }}
+  </title>
+
+  <style>
+    @page {
+      size: A4;
+      margin: 18mm 16mm 20mm;
+
+      @bottom-left {
+        content: "BEACON Security Assessment";
+        color: #64748b;
+        font-size: 8pt;
+      }
+
+      @bottom-right {
+        content: "Page " counter(page) " of " counter(pages);
+        color: #64748b;
+        font-size: 8pt;
+      }
+    }
+
+    @page:first {
+      @bottom-left {
+        content: "";
+      }
+
+      @bottom-right {
+        content: "";
+      }
+    }
+
+    :root {
+      --navy: #1c1114;
+      --blue: #c02236;
+      --blue-light: #fbe9ec;
+      --slate: #6f5b60;
+      --border: #ded1d4;
+      --background: #fbf7f8;
+      --critical: #7f1d1d;
+      --high: #b91c1c;
+      --medium: #b45309;
+      --low: #8a6508;
+      --informational: #475569;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--navy);
+      background: white;
+      font-family: "DejaVu Sans", sans-serif;
+      font-size: 9.5pt;
+      line-height: 1.5;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      padding-bottom: 7px;
+      border-bottom: 2px solid var(--blue);
+      font-size: 17pt;
+    }
+
+    h3 {
+      margin-bottom: 7px;
+      font-size: 11.5pt;
+    }
+
+    .cover {
+      display: flex;
+      min-height: 245mm;
+      padding-top: 8mm;
+      border-top: 6px solid var(--blue);
+      flex-direction: column;
+      justify-content: space-between;
+      page-break-after: always;
+    }
+
+    .brand {
+      color: var(--navy);
+      font-size: 15pt;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+    }
+
+    .brand::after {
+      content: "  /  ASSESSMENT PLATFORM";
+      color: var(--blue);
+      font-size: 6.5pt;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+    }
+
+    .cover-title {
+      max-width: 150mm;
+      margin-top: 42mm;
+      color: var(--navy);
+      font-size: 32pt;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+    }
+
+    .cover-subtitle {
+      color: var(--slate);
+      font-size: 15pt;
+    }
+
+    .cover-rule {
+      width: 70mm;
+      height: 5px;
+      margin: 18px 0;
+      background: var(--blue);
+    }
+
+    .classification {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 7px 12px;
+      border: 1px solid var(--blue);
+      color: var(--blue);
+      font-size: 8pt;
+      font-weight: bold;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .metadata {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .metadata th,
+    .metadata td {
+      padding: 7px 8px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .metadata th {
+      width: 38%;
+      color: var(--slate);
+      font-weight: 600;
+    }
+
+    .section {
+      page-break-before: always;
+    }
+
+    .section.first {
+      page-break-before: auto;
+    }
+
+    .cards {
+      display: table;
+      width: 100%;
+      margin: 16px 0 22px;
+      table-layout: fixed;
+      border-spacing: 7px;
+    }
+
+    .card {
+      display: table-cell;
+      padding: 13px;
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--blue);
+      border-radius: 6px;
+      background: var(--background);
+      text-align: center;
+    }
+
+    .card-value {
+      color: var(--blue);
+      font-size: 21pt;
+      font-weight: 800;
+    }
+
+    .card-label {
+      color: var(--slate);
+      font-size: 8pt;
+      text-transform: uppercase;
+    }
+
+    .severity-grid {
+      width: 100%;
+      margin: 14px 0 22px;
+      border-collapse: collapse;
+    }
+
+    .severity-grid th,
+    .severity-grid td {
+      padding: 8px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .severity-grid th {
+      background: var(--navy);
+      color: white;
+    }
+
+    .critical {
+      color: var(--critical);
+    }
+
+    .high {
+      color: var(--high);
+    }
+
+    .medium {
+      color: var(--medium);
+    }
+
+    .low {
+      color: var(--low);
+    }
+
+    .informational {
+      color: var(--informational);
+    }
+
+    .severity-label {
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .issues-table {
+      width: 100%;
+      margin-top: 14px;
+      border-collapse: collapse;
+    }
+
+    .issues-table th,
+    .issues-table td {
+      padding: 8px;
+      border: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .issues-table th {
+      background: var(--navy);
+      color: white;
+      font-size: 8.5pt;
+    }
+
+    .issues-table td.number {
+      text-align: center;
+    }
+
+    .issues-table tr {
+      page-break-inside: avoid;
+    }
+
+    .issue {
+      margin-bottom: 18px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--blue);
+      border-radius: 5px;
+      page-break-inside: avoid;
+    }
+
+    .issue-header {
+      display: table;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .issue-title {
+      display: table-cell;
+      width: 76%;
+      padding-right: 10px;
+      font-size: 13pt;
+      font-weight: 800;
+    }
+
+    .issue-severity {
+      display: table-cell;
+      width: 24%;
+      text-align: right;
+      font-size: 10pt;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .issue-meta {
+      margin-bottom: 10px;
+      color: var(--slate);
+      font-size: 8.5pt;
+    }
+
+    .issue-sources {
+      margin: 6px 0 10px;
+    }
+
+    .source-badge {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 3px 6px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #f8f3f4;
+      color: var(--navy);
+      font-size: 7.5pt;
+      font-weight: 700;
+    }
+
+    .source-badge.confirmed {
+      border-color: #b8d8c9;
+      background: #f0f8f4;
+    }
+
+    .issue-source-details {
+      margin-top: 4px;
+      color: var(--slate);
+      font-size: 7.5pt;
+      line-height: 1.45;
+    }
+
+    .validation-required {
+      color: #9a6700;
+      font-weight: 800;
+    }
+
+    .sources-cell {
+      min-width: 88px;
+    }
+
+    .issue-text {
+      white-space: pre-line;
+    }
+
+    .url-list {
+      margin: 7px 0 0;
+      padding-left: 18px;
+    }
+
+    .url-list li {
+      margin-bottom: 4px;
+      word-break: break-all;
+    }
+
+    .note {
+      margin: 14px 0;
+      padding: 11px 13px;
+      border: 1px solid #f0c8cf;
+      border-left: 4px solid var(--blue);
+      background: var(--blue-light);
+    }
+
+    .method-list {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .method-list li {
+      margin-bottom: 5px;
+    }
+
+    .coverage-title {
+      margin: 18px 0 8px;
+      color: var(--navy);
+      font-size: 11pt;
+    }
+
+    .tool-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .tool-table th,
+    .tool-table td {
+      padding: 7px 8px;
+      border: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .tool-table th {
+      background: var(--navy);
+      color: white;
+      font-size: 8pt;
+    }
+
+    .tool-state {
+      color: var(--blue);
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .small {
+      color: var(--slate);
+      font-size: 8.5pt;
+    }
+
+    .no-findings {
+      padding: 20px;
+      border: 1px solid var(--border);
+      background: var(--background);
+      text-align: center;
+    }
+
+    code {
+      font-family: "DejaVu Sans Mono", monospace;
+      font-size: 8pt;
+    }
+  </style>
+</head>
+
+<body>
+  <section class="cover">
+    <div>
+      <div class="brand">BEACON</div>
+
+      <h1 class="cover-title">
+        Security Assessment Report
+      </h1>
+
+      <div class="cover-rule"></div>
+
+      <p class="cover-subtitle">
+        Automated constrained web security assessment
+      </p>
+
+      <span class="classification">
+        Confidential — Authorized Use Only
+      </span>
+    </div>
+
+    <table class="metadata">
+      <tr>
+        <th>Target</th>
+        <td>{{ target.normalized_url }}</td>
+      </tr>
+
+      <tr>
+        <th>Hostname</th>
+        <td>{{ target.hostname }}</td>
+      </tr>
+
+      <tr>
+        <th>Assessment ID</th>
+        <td><code>{{ scan.id }}</code></td>
+      </tr>
+
+      <tr>
+        <th>Assessment level</th>
+        <td>{{ scan.scan_level|upper }}</td>
+      </tr>
+
+      <tr>
+        <th>Requested by</th>
+        <td>{{ user.full_name }} — {{ user.email }}</td>
+      </tr>
+
+      <tr>
+        <th>Generated</th>
+        <td>
+          {{ generated_at|report_datetime }}
+        </td>
+      </tr>
+
+      <tr>
+        <th>Report version</th>
+        <td>{{ report_version }}</td>
+      </tr>
+    </table>
+  </section>
+
+  <section class="section first">
+    <h2>Executive Security Posture</h2>
+
+    <p>
+      BEACON completed a constrained Basic web security
+      assessment of
+      <strong>{{ target.hostname }}</strong>.
+      Security posture in this report is based only on
+      results classified as
+      <strong>Security Issues</strong>.
+      Attack-surface entries, informational observations,
+      and assessment limitations are reported separately
+      and do not increase the security severity rating.
+    </p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-value">
+          {{ summary.security_issue_count }}
+        </div>
+
+        <div class="card-label">
+          Security Issues
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-value">
+          {{ summary.distinct_issues }}
+        </div>
+
+        <div class="card-label">
+          Total Assessment Results
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-value">
+          {{ summary.highest_security_severity|upper }}
+        </div>
+
+        <div class="card-label">
+          Highest Security Severity
+        </div>
+      </div>
+    </div>
+
+    <table class="severity-grid">
+      <thead>
+        <tr>
+          <th>Severity</th>
+          <th>Security Issues</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for severity in severity_order %}
+        <tr>
+          <td class="severity-label {{ severity }}">
+            {{ severity }}
+          </td>
+
+          <td>
+            {{ summary.security_issues_by_severity[severity] }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <h3>Assessment classification breakdown</h3>
+
+    <table class="severity-grid">
+      <thead>
+        <tr>
+          <th>Classification</th>
+          <th>Count</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>Security Issues</td>
+          <td>{{ summary.security_issue_count }}</td>
+        </tr>
+
+        <tr>
+          <td>Attack Surface</td>
+          <td>{{ summary.attack_surface_count }}</td>
+        </tr>
+
+        <tr>
+          <td>Observations</td>
+          <td>{{ summary.observation_count }}</td>
+        </tr>
+
+        <tr>
+          <td>Assessment Limitations</td>
+          <td>{{ summary.limitation_count }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="note">
+      Automated scanner output is classified before it is
+      incorporated into the security posture. Only
+      Security Issues contribute to the highest security
+      severity shown above. Other assessment results remain
+      available for visibility and analyst review.
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Scope and Methodology</h2>
+
+    <table class="metadata">
+      <tr>
+        <th>Target URL</th>
+        <td>{{ target.normalized_url }}</td>
+      </tr>
+
+      <tr>
+        <th>Ownership verification</th>
+        <td>
+          {{ target.verification_method|upper }}
+          verification completed
+          {{ target.verified_at|report_datetime }}
+        </td>
+      </tr>
+
+      <tr>
+        <th>Scan started</th>
+        <td>{{ scan.started_at|report_datetime }}</td>
+      </tr>
+
+      <tr>
+        <th>Scan completed</th>
+        <td>{{ scan.completed_at|report_datetime }}</td>
+      </tr>
+
+      <tr>
+        <th>Scan status</th>
+        <td>{{ scan.status|upper }}</td>
+      </tr>
+
+      <tr>
+        <th>Method</th>
+        <td>
+          <ul class="method-list">
+            <li>Constrained TCP service discovery with Nmap.</li>
+            <li>Traditional crawling and passive HTTP response analysis with OWASP ZAP. No ZAP active attack scan is launched by the Basic profile.</li>
+            <li>Constrained unauthenticated web-server checks with Nikto using the BEACON Basic profile.</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+
+    {% if tool_runs %}
+    <h3 class="coverage-title">Scanner coverage</h3>
+
+    <table class="tool-table">
+      <thead>
+        <tr>
+          <th>Scanner</th>
+          <th>Version</th>
+          <th>Status</th>
+          <th>Exit</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for tool_run in tool_runs %}
+        <tr>
+          <td>{{ tool_run.tool_name|upper }}</td>
+          <td>{{ tool_run.tool_version or "—" }}</td>
+          <td class="tool-state">{{ tool_run.status }}</td>
+          <td>{{ tool_run.exit_code if tool_run.exit_code is not none else "—" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </section>
+
+  <section class="section">
+    <h2>Assessment Results Overview</h2>
+
+    {% if issues %}
+    <table class="issues-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Classification</th>
+          <th>Severity</th>
+          <th>Result</th>
+          <th>Sources</th>
+          <th>Occurrences</th>
+          <th>Affected Resources</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for issue in issues %}
+        <tr>
+          <td class="number">
+            {{ loop.index }}
+          </td>
+
+          <td>
+            {% if issue.classification == "security_issue" %}
+            Security Issue
+            {% elif issue.classification == "attack_surface" %}
+            Attack Surface
+            {% elif issue.classification == "observation" %}
+            Observation
+            {% elif issue.classification == "limitation" %}
+            Assessment Limitation
+            {% else %}
+            {{ issue.classification }}
+            {% endif %}
+          </td>
+
+          <td>
+            {% if issue.classification == "security_issue" %}
+            <span class="severity-label {{ issue.severity }}">
+              {{ issue.severity }}
+            </span>
+            {% else %}
+            Not scored
+            {% endif %}
+          </td>
+
+          <td>
+            {{ issue.title }}
+          </td>
+
+          <td class="sources-cell">
+            {% for source in issue.sources %}
+            <span class="source-badge{% if issue.source_count > 1 %} confirmed{% endif %}">
+              {{ source.tool_name|report_tool_name }}
+            </span>
+            {% endfor %}
+          </td>
+
+          <td class="number">
+            {{ issue.occurrence_count }}
+          </td>
+
+          <td class="number">
+            {{ issue.affected_url_count }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="no-findings">
+      No assessment results were recorded.
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="section">
+    <h2>Security Issues</h2>
+
+    <p class="small">
+      These results represent findings classified by BEACON
+      as security issues. Their severities contribute to the
+      security posture reported in the Executive Security
+      Posture section.
+    </p>
+
+    {% for issue in security_issues %}
+    <article class="issue">
+      <div class="issue-header">
+        <div class="issue-title">
+          {{ loop.index }}. {{ issue.title }}
+        </div>
+
+        <div class="issue-severity {{ issue.severity }}">
+          {{ issue.severity }}
+        </div>
+      </div>
+
+      <div class="issue-meta">
+        {% if issue.source_count > 1 %}
+        Cross-engine correlation
+        {% else %}
+        Single-engine security finding
+        {% endif %}
+
+        {% if issue.cwe_id %}
+        · {{ issue.cwe_id }}
+        {% endif %}
+
+        {% if issue.confidence %}
+        · Confidence: {{ issue.confidence|upper }}
+        {% endif %}
+
+        {% if issue.requires_manual_validation %}
+        · <span class="validation-required">
+          Manual validation required
+        </span>
+        {% endif %}
+      </div>
+
+      {% if issue.sources %}
+      <div class="issue-sources">
+        <strong>
+          {% if issue.source_count > 1 %}
+          Confirmed by:
+          {% else %}
+          Observed by:
+          {% endif %}
+        </strong>
+
+        {% for source in issue.sources %}
+        <span class="source-badge{% if issue.source_count > 1 %} confirmed{% endif %}">
+          {{ source.tool_name|report_tool_name }}
+        </span>
+        {% endfor %}
+
+        <div class="issue-source-details">
+          Scanner provenance:
+          {% for source in issue.sources %}
+          {{ source.tool_name|report_tool_name }}
+          {% if source.external_finding_ids %}
+          (rule{% if source.external_finding_ids|length > 1 %}s{% endif %}
+          {{ source.external_finding_ids|join(", ") }})
+          {% endif %}
+          — {{ source.occurrence_count }}
+          observation{% if source.occurrence_count != 1 %}s{% endif %}
+          {% if not loop.last %} · {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <h3>Description</h3>
+
+      <p class="issue-text">
+        {{ issue.description or
+           "No scanner description was provided." }}
+      </p>
+
+      <h3>Impact and prevalence</h3>
+
+      <p>
+        BEACON recorded
+        <strong>{{ issue.occurrence_count }}</strong>
+        observation(s) across
+        <strong>{{ issue.affected_url_count }}</strong>
+        distinct affected URL(s).
+      </p>
+
+      <h3>Recommended remediation</h3>
+
+      <p class="issue-text">
+        {{ issue.remediation or
+           "Review the affected response and implement the
+           appropriate security control for this finding." }}
+      </p>
+
+      {% if issue.sample_affected_urls %}
+      <h3>Sample affected URLs</h3>
+
+      <ul class="url-list">
+        {% for affected_url in issue.sample_affected_urls %}
+        <li>{{ affected_url }}</li>
+        {% endfor %}
+      </ul>
+
+      {% if issue.affected_url_count >
+            issue.sample_affected_urls|length %}
+      <p class="small">
+        Only the first
+        {{ issue.sample_affected_urls|length }}
+        URLs are displayed. The database retains the
+        complete raw evidence set.
+      </p>
+      {% endif %}
+      {% endif %}
+    </article>
+    {% else %}
+    <div class="no-findings">
+      No Security Issues were recorded by this automated
+      assessment.
+    </div>
+    {% endfor %}
+  </section>
+
+  {% if attack_surface %}
+  <section class="section">
+    <h2>Attack Surface</h2>
+
+    <p class="small">
+      These entries describe discovered exposure such as
+      reachable services, ports, or externally visible
+      components. They do not independently represent
+      confirmed vulnerabilities.
+    </p>
+
+    {% for issue in attack_surface %}
+    <article class="issue">
+      <div class="issue-header">
+        <div class="issue-title">
+          {{ loop.index }}. {{ issue.title }}
+        </div>
+
+        <div class="issue-severity informational">
+          Attack Surface
+        </div>
+      </div>
+
+      <div class="issue-meta">
+        Classification: Attack Surface
+
+        {% if issue.confidence %}
+        · Confidence: {{ issue.confidence|upper }}
+        {% endif %}
+      </div>
+
+      {% if issue.sources %}
+      <div class="issue-sources">
+        <strong>Discovered by:</strong>
+
+        {% for source in issue.sources %}
+        <span class="source-badge">
+          {{ source.tool_name|report_tool_name }}
+        </span>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <h3>Description</h3>
+
+      <p class="issue-text">
+        {{ issue.description or
+           "A reachable service or externally visible
+           component was identified during discovery." }}
+      </p>
+
+      <h3>Exposure context</h3>
+
+      <p>
+        BEACON recorded
+        <strong>{{ issue.occurrence_count }}</strong>
+        observation(s) across
+        <strong>{{ issue.affected_url_count }}</strong>
+        affected resource(s). This entry is reported for
+        attack-surface visibility and is not scored as a
+        security vulnerability.
+      </p>
+
+      {% if issue.sample_affected_urls %}
+      <h3>Sample affected resources</h3>
+
+      <ul class="url-list">
+        {% for affected_url in issue.sample_affected_urls %}
+        <li>{{ affected_url }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </article>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% if observations %}
+  <section class="section">
+    <h2>Observations</h2>
+
+    <p class="small">
+      These are informational assessment observations.
+      They provide useful context but do not independently
+      represent confirmed security vulnerabilities.
+    </p>
+
+    {% for issue in observations %}
+    <article class="issue">
+      <div class="issue-header">
+        <div class="issue-title">
+          {{ loop.index }}. {{ issue.title }}
+        </div>
+
+        <div class="issue-severity informational">
+          Observation
+        </div>
+      </div>
+
+      <div class="issue-meta">
+        Classification: Observation
+
+        {% if issue.confidence %}
+        · Confidence: {{ issue.confidence|upper }}
+        {% endif %}
+      </div>
+
+      {% if issue.sources %}
+      <div class="issue-sources">
+        <strong>Observed by:</strong>
+
+        {% for source in issue.sources %}
+        <span class="source-badge">
+          {{ source.tool_name|report_tool_name }}
+        </span>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <h3>Description</h3>
+
+      <p class="issue-text">
+        {{ issue.description or
+           "An informational assessment observation was
+           recorded by the scanner." }}
+      </p>
+
+      <h3>Assessment context</h3>
+
+      <p>
+        This observation was recorded
+        <strong>{{ issue.occurrence_count }}</strong>
+        time(s) across
+        <strong>{{ issue.affected_url_count }}</strong>
+        affected resource(s). It is retained for analyst
+        context and does not contribute to the security
+        severity rating.
+      </p>
+
+      {% if issue.sample_affected_urls %}
+      <h3>Sample affected resources</h3>
+
+      <ul class="url-list">
+        {% for affected_url in issue.sample_affected_urls %}
+        <li>{{ affected_url }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </article>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% if limitations %}
+  <section class="section">
+    <h2>Assessment Limitations</h2>
+
+    <p class="small">
+      These entries identify constraints or coverage gaps
+      affecting the automated assessment. They are not
+      vulnerabilities and do not contribute to security
+      severity.
+    </p>
+
+    {% for issue in limitations %}
+    <article class="issue">
+      <div class="issue-header">
+        <div class="issue-title">
+          {{ loop.index }}. {{ issue.title }}
+        </div>
+
+        <div class="issue-severity informational">
+          Limitation
+        </div>
+      </div>
+
+      <div class="issue-meta">
+        Classification: Assessment Limitation
+
+        {% if issue.requires_manual_validation %}
+        · <span class="validation-required">
+          Manual validation recommended
+        </span>
+        {% endif %}
+      </div>
+
+      {% if issue.sources %}
+      <div class="issue-sources">
+        <strong>Reported by:</strong>
+
+        {% for source in issue.sources %}
+        <span class="source-badge">
+          {{ source.tool_name|report_tool_name }}
+        </span>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <h3>Limitation</h3>
+
+      <p class="issue-text">
+        {{ issue.description or issue.title }}
+      </p>
+
+      <h3>Coverage impact</h3>
+
+      <p>
+        This item describes an assessment coverage
+        limitation. It does not independently indicate a
+        vulnerability. Additional manual validation may be
+        appropriate when the uncovered technology or
+        protocol is in scope.
+      </p>
+
+      {% if issue.sample_affected_urls %}
+      <h3>Affected scope</h3>
+
+      <ul class="url-list">
+        {% for affected_url in issue.sample_affected_urls %}
+        <li>{{ affected_url }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </article>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  <section class="section">
+    <h2>Report Notes</h2>
+
+    <p>
+      Findings should be validated by an authorized security
+      professional before remediation decisions are finalized.
+      Scanner severity reflects automated rule classifications
+      and may require adjustment based on business context.
+    </p>
+
+    <p>
+      Raw evidence remains available through BEACON's
+      authenticated findings API. This report intentionally
+      groups repeated observations and correlates equivalent
+      findings across independent scanners to reduce noise
+      without discarding scanner provenance.
+    </p>
+
+    <table class="metadata">
+      <tr>
+        <th>Assessment ID</th>
+        <td><code>{{ scan.id }}</code></td>
+      </tr>
+
+      <tr>
+        <th>Raw observations</th>
+        <td>{{ summary.total_finding_instances }}</td>
+      </tr>
+
+      <tr>
+        <th>Total assessment results</th>
+        <td>{{ summary.distinct_issues }}</td>
+      </tr>
+
+      <tr>
+        <th>Generated by</th>
+        <td>
+          BEACON — Business Ethical Automated Cyber
+          Oversight Network
+        </td>
+      </tr>
+    </table>
+  </section>
+</body>
+</html>

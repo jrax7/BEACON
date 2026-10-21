@@ -1,0 +1,833 @@
+/*
+ * BEACON frontend styles — organized by concern instead of one monolithic
+ * file. Import order matters: tokens/base/primitives/layout first, then
+ * shared component additions, then page-specific styles, then responsive
+ * overrides last so they can safely override anything above.
+ */
+
+@import './styles/tokens.css';
+@import './styles/base.css';
+@import './styles/motion.css';
+@import './styles/primitives.css';
+@import './styles/layout.css';
+@import './styles/components.css';
+
+@import './styles/pages/auth.css';
+@import './styles/pages/dashboard.css';
+@import './styles/pages/targets.css';
+@import './styles/pages/scans.css';
+@import './styles/pages/scan-detail.css';
+@import './styles/pages/findings.css';
+
+@import './styles/responsive.css';
+
+
+/* Phase 16B Task 12 - CSP-safe dynamic progress widths */
+
+.mini-progress-track > .progress-width-0,
+.tool-progress-track > .progress-width-0,
+.stage-progress-track > .progress-width-0,
+.workflow-track > .workflow-fill.progress-width-0
+{
+  width: 0%;
+}
+
+.mini-progress-track > .progress-width-1,
+.tool-progress-track > .progress-width-1,
+.stage-progress-track > .progress-width-1,
+.workflow-track > .workflow-fill.progress-width-1
+{
+  width: 1%;
+}
+
+.mini-progress-track > .progress-width-2,
+.tool-progress-track > .progress-width-2,
+.stage-progress-track > .progress-width-2,
+.workflow-track > .workflow-fill.progress-width-2
+{
+  width: 2%;
+}
+
+.mini-progress-track > .progress-width-3,
+.tool-progress-track > .progress-width-3,
+.stage-progress-track > .progress-width-3,
+.workflow-track > .workflow-fill.progress-width-3
+{
+  width: 3%;
+}
+
+.mini-progress-track > .progress-width-4,
+.tool-progress-track > .progress-width-4,
+.stage-progress-track > .progress-width-4,
+.workflow-track > .workflow-fill.progress-width-4
+{
+  width: 4%;
+}
+
+.mini-progress-track > .progress-width-5,
+.tool-progress-track > .progress-width-5,
+.stage-progress-track > .progress-width-5,
+.workflow-track > .workflow-fill.progress-width-5
+{
+  width: 5%;
+}
+
+.mini-progress-track > .progress-width-6,
+.tool-progress-track > .progress-width-6,
+.stage-progress-track > .progress-width-6,
+.workflow-track > .workflow-fill.progress-width-6
+{
+  width: 6%;
+}
+
+.mini-progress-track > .progress-width-7,
+.tool-progress-track > .progress-width-7,
+.stage-progress-track > .progress-width-7,
+.workflow-track > .workflow-fill.progress-width-7
+{
+  width: 7%;
+}
+
+.mini-progress-track > .progress-width-8,
+.tool-progress-track > .progress-width-8,
+.stage-progress-track > .progress-width-8,
+.workflow-track > .workflow-fill.progress-width-8
+{
+  width: 8%;
+}
+
+.mini-progress-track > .progress-width-9,
+.tool-progress-track > .progress-width-9,
+.stage-progress-track > .progress-width-9,
+.workflow-track > .workflow-fill.progress-width-9
+{
+  width: 9%;
+}
+
+.mini-progress-track > .progress-width-10,
+.tool-progress-track > .progress-width-10,
+.stage-progress-track > .progress-width-10,
+.workflow-track > .workflow-fill.progress-width-10
+{
+  width: 10%;
+}
+
+.mini-progress-track > .progress-width-11,
+.tool-progress-track > .progress-width-11,
+.stage-progress-track > .progress-width-11,
+.workflow-track > .workflow-fill.progress-width-11
+{
+  width: 11%;
+}
+
+.mini-progress-track > .progress-width-12,
+.tool-progress-track > .progress-width-12,
+.stage-progress-track > .progress-width-12,
+.workflow-track > .workflow-fill.progress-width-12
+{
+  width: 12%;
+}
+
+.mini-progress-track > .progress-width-13,
+.tool-progress-track > .progress-width-13,
+.stage-progress-track > .progress-width-13,
+.workflow-track > .workflow-fill.progress-width-13
+{
+  width: 13%;
+}
+
+.mini-progress-track > .progress-width-14,
+.tool-progress-track > .progress-width-14,
+.stage-progress-track > .progress-width-14,
+.workflow-track > .workflow-fill.progress-width-14
+{
+  width: 14%;
+}
+
+.mini-progress-track > .progress-width-15,
+.tool-progress-track > .progress-width-15,
+.stage-progress-track > .progress-width-15,
+.workflow-track > .workflow-fill.progress-width-15
+{
+  width: 15%;
+}
+
+.mini-progress-track > .progress-width-16,
+.tool-progress-track > .progress-width-16,
+.stage-progress-track > .progress-width-16,
+.workflow-track > .workflow-fill.progress-width-16
+{
+  width: 16%;
+}
+
+.mini-progress-track > .progress-width-17,
+.tool-progress-track > .progress-width-17,
+.stage-progress-track > .progress-width-17,
+.workflow-track > .workflow-fill.progress-width-17
+{
+  width: 17%;
+}
+
+.mini-progress-track > .progress-width-18,
+.tool-progress-track > .progress-width-18,
+.stage-progress-track > .progress-width-18,
+.workflow-track > .workflow-fill.progress-width-18
+{
+  width: 18%;
+}
+
+.mini-progress-track > .progress-width-19,
+.tool-progress-track > .progress-width-19,
+.stage-progress-track > .progress-width-19,
+.workflow-track > .workflow-fill.progress-width-19
+{
+  width: 19%;
+}
+
+.mini-progress-track > .progress-width-20,
+.tool-progress-track > .progress-width-20,
+.stage-progress-track > .progress-width-20,
+.workflow-track > .workflow-fill.progress-width-20
+{
+  width: 20%;
+}
+
+.mini-progress-track > .progress-width-21,
+.tool-progress-track > .progress-width-21,
+.stage-progress-track > .progress-width-21,
+.workflow-track > .workflow-fill.progress-width-21
+{
+  width: 21%;
+}
+
+.mini-progress-track > .progress-width-22,
+.tool-progress-track > .progress-width-22,
+.stage-progress-track > .progress-width-22,
+.workflow-track > .workflow-fill.progress-width-22
+{
+  width: 22%;
+}
+
+.mini-progress-track > .progress-width-23,
+.tool-progress-track > .progress-width-23,
+.stage-progress-track > .progress-width-23,
+.workflow-track > .workflow-fill.progress-width-23
+{
+  width: 23%;
+}
+
+.mini-progress-track > .progress-width-24,
+.tool-progress-track > .progress-width-24,
+.stage-progress-track > .progress-width-24,
+.workflow-track > .workflow-fill.progress-width-24
+{
+  width: 24%;
+}
+
+.mini-progress-track > .progress-width-25,
+.tool-progress-track > .progress-width-25,
+.stage-progress-track > .progress-width-25,
+.workflow-track > .workflow-fill.progress-width-25
+{
+  width: 25%;
+}
+
+.mini-progress-track > .progress-width-26,
+.tool-progress-track > .progress-width-26,
+.stage-progress-track > .progress-width-26,
+.workflow-track > .workflow-fill.progress-width-26
+{
+  width: 26%;
+}
+
+.mini-progress-track > .progress-width-27,
+.tool-progress-track > .progress-width-27,
+.stage-progress-track > .progress-width-27,
+.workflow-track > .workflow-fill.progress-width-27
+{
+  width: 27%;
+}
+
+.mini-progress-track > .progress-width-28,
+.tool-progress-track > .progress-width-28,
+.stage-progress-track > .progress-width-28,
+.workflow-track > .workflow-fill.progress-width-28
+{
+  width: 28%;
+}
+
+.mini-progress-track > .progress-width-29,
+.tool-progress-track > .progress-width-29,
+.stage-progress-track > .progress-width-29,
+.workflow-track > .workflow-fill.progress-width-29
+{
+  width: 29%;
+}
+
+.mini-progress-track > .progress-width-30,
+.tool-progress-track > .progress-width-30,
+.stage-progress-track > .progress-width-30,
+.workflow-track > .workflow-fill.progress-width-30
+{
+  width: 30%;
+}
+
+.mini-progress-track > .progress-width-31,
+.tool-progress-track > .progress-width-31,
+.stage-progress-track > .progress-width-31,
+.workflow-track > .workflow-fill.progress-width-31
+{
+  width: 31%;
+}
+
+.mini-progress-track > .progress-width-32,
+.tool-progress-track > .progress-width-32,
+.stage-progress-track > .progress-width-32,
+.workflow-track > .workflow-fill.progress-width-32
+{
+  width: 32%;
+}
+
+.mini-progress-track > .progress-width-33,
+.tool-progress-track > .progress-width-33,
+.stage-progress-track > .progress-width-33,
+.workflow-track > .workflow-fill.progress-width-33
+{
+  width: 33%;
+}
+
+.mini-progress-track > .progress-width-34,
+.tool-progress-track > .progress-width-34,
+.stage-progress-track > .progress-width-34,
+.workflow-track > .workflow-fill.progress-width-34
+{
+  width: 34%;
+}
+
+.mini-progress-track > .progress-width-35,
+.tool-progress-track > .progress-width-35,
+.stage-progress-track > .progress-width-35,
+.workflow-track > .workflow-fill.progress-width-35
+{
+  width: 35%;
+}
+
+.mini-progress-track > .progress-width-36,
+.tool-progress-track > .progress-width-36,
+.stage-progress-track > .progress-width-36,
+.workflow-track > .workflow-fill.progress-width-36
+{
+  width: 36%;
+}
+
+.mini-progress-track > .progress-width-37,
+.tool-progress-track > .progress-width-37,
+.stage-progress-track > .progress-width-37,
+.workflow-track > .workflow-fill.progress-width-37
+{
+  width: 37%;
+}
+
+.mini-progress-track > .progress-width-38,
+.tool-progress-track > .progress-width-38,
+.stage-progress-track > .progress-width-38,
+.workflow-track > .workflow-fill.progress-width-38
+{
+  width: 38%;
+}
+
+.mini-progress-track > .progress-width-39,
+.tool-progress-track > .progress-width-39,
+.stage-progress-track > .progress-width-39,
+.workflow-track > .workflow-fill.progress-width-39
+{
+  width: 39%;
+}
+
+.mini-progress-track > .progress-width-40,
+.tool-progress-track > .progress-width-40,
+.stage-progress-track > .progress-width-40,
+.workflow-track > .workflow-fill.progress-width-40
+{
+  width: 40%;
+}
+
+.mini-progress-track > .progress-width-41,
+.tool-progress-track > .progress-width-41,
+.stage-progress-track > .progress-width-41,
+.workflow-track > .workflow-fill.progress-width-41
+{
+  width: 41%;
+}
+
+.mini-progress-track > .progress-width-42,
+.tool-progress-track > .progress-width-42,
+.stage-progress-track > .progress-width-42,
+.workflow-track > .workflow-fill.progress-width-42
+{
+  width: 42%;
+}
+
+.mini-progress-track > .progress-width-43,
+.tool-progress-track > .progress-width-43,
+.stage-progress-track > .progress-width-43,
+.workflow-track > .workflow-fill.progress-width-43
+{
+  width: 43%;
+}
+
+.mini-progress-track > .progress-width-44,
+.tool-progress-track > .progress-width-44,
+.stage-progress-track > .progress-width-44,
+.workflow-track > .workflow-fill.progress-width-44
+{
+  width: 44%;
+}
+
+.mini-progress-track > .progress-width-45,
+.tool-progress-track > .progress-width-45,
+.stage-progress-track > .progress-width-45,
+.workflow-track > .workflow-fill.progress-width-45
+{
+  width: 45%;
+}
+
+.mini-progress-track > .progress-width-46,
+.tool-progress-track > .progress-width-46,
+.stage-progress-track > .progress-width-46,
+.workflow-track > .workflow-fill.progress-width-46
+{
+  width: 46%;
+}
+
+.mini-progress-track > .progress-width-47,
+.tool-progress-track > .progress-width-47,
+.stage-progress-track > .progress-width-47,
+.workflow-track > .workflow-fill.progress-width-47
+{
+  width: 47%;
+}
+
+.mini-progress-track > .progress-width-48,
+.tool-progress-track > .progress-width-48,
+.stage-progress-track > .progress-width-48,
+.workflow-track > .workflow-fill.progress-width-48
+{
+  width: 48%;
+}
+
+.mini-progress-track > .progress-width-49,
+.tool-progress-track > .progress-width-49,
+.stage-progress-track > .progress-width-49,
+.workflow-track > .workflow-fill.progress-width-49
+{
+  width: 49%;
+}
+
+.mini-progress-track > .progress-width-50,
+.tool-progress-track > .progress-width-50,
+.stage-progress-track > .progress-width-50,
+.workflow-track > .workflow-fill.progress-width-50
+{
+  width: 50%;
+}
+
+.mini-progress-track > .progress-width-51,
+.tool-progress-track > .progress-width-51,
+.stage-progress-track > .progress-width-51,
+.workflow-track > .workflow-fill.progress-width-51
+{
+  width: 51%;
+}
+
+.mini-progress-track > .progress-width-52,
+.tool-progress-track > .progress-width-52,
+.stage-progress-track > .progress-width-52,
+.workflow-track > .workflow-fill.progress-width-52
+{
+  width: 52%;
+}
+
+.mini-progress-track > .progress-width-53,
+.tool-progress-track > .progress-width-53,
+.stage-progress-track > .progress-width-53,
+.workflow-track > .workflow-fill.progress-width-53
+{
+  width: 53%;
+}
+
+.mini-progress-track > .progress-width-54,
+.tool-progress-track > .progress-width-54,
+.stage-progress-track > .progress-width-54,
+.workflow-track > .workflow-fill.progress-width-54
+{
+  width: 54%;
+}
+
+.mini-progress-track > .progress-width-55,
+.tool-progress-track > .progress-width-55,
+.stage-progress-track > .progress-width-55,
+.workflow-track > .workflow-fill.progress-width-55
+{
+  width: 55%;
+}
+
+.mini-progress-track > .progress-width-56,
+.tool-progress-track > .progress-width-56,
+.stage-progress-track > .progress-width-56,
+.workflow-track > .workflow-fill.progress-width-56
+{
+  width: 56%;
+}
+
+.mini-progress-track > .progress-width-57,
+.tool-progress-track > .progress-width-57,
+.stage-progress-track > .progress-width-57,
+.workflow-track > .workflow-fill.progress-width-57
+{
+  width: 57%;
+}
+
+.mini-progress-track > .progress-width-58,
+.tool-progress-track > .progress-width-58,
+.stage-progress-track > .progress-width-58,
+.workflow-track > .workflow-fill.progress-width-58
+{
+  width: 58%;
+}
+
+.mini-progress-track > .progress-width-59,
+.tool-progress-track > .progress-width-59,
+.stage-progress-track > .progress-width-59,
+.workflow-track > .workflow-fill.progress-width-59
+{
+  width: 59%;
+}
+
+.mini-progress-track > .progress-width-60,
+.tool-progress-track > .progress-width-60,
+.stage-progress-track > .progress-width-60,
+.workflow-track > .workflow-fill.progress-width-60
+{
+  width: 60%;
+}
+
+.mini-progress-track > .progress-width-61,
+.tool-progress-track > .progress-width-61,
+.stage-progress-track > .progress-width-61,
+.workflow-track > .workflow-fill.progress-width-61
+{
+  width: 61%;
+}
+
+.mini-progress-track > .progress-width-62,
+.tool-progress-track > .progress-width-62,
+.stage-progress-track > .progress-width-62,
+.workflow-track > .workflow-fill.progress-width-62
+{
+  width: 62%;
+}
+
+.mini-progress-track > .progress-width-63,
+.tool-progress-track > .progress-width-63,
+.stage-progress-track > .progress-width-63,
+.workflow-track > .workflow-fill.progress-width-63
+{
+  width: 63%;
+}
+
+.mini-progress-track > .progress-width-64,
+.tool-progress-track > .progress-width-64,
+.stage-progress-track > .progress-width-64,
+.workflow-track > .workflow-fill.progress-width-64
+{
+  width: 64%;
+}
+
+.mini-progress-track > .progress-width-65,
+.tool-progress-track > .progress-width-65,
+.stage-progress-track > .progress-width-65,
+.workflow-track > .workflow-fill.progress-width-65
+{
+  width: 65%;
+}
+
+.mini-progress-track > .progress-width-66,
+.tool-progress-track > .progress-width-66,
+.stage-progress-track > .progress-width-66,
+.workflow-track > .workflow-fill.progress-width-66
+{
+  width: 66%;
+}
+
+.mini-progress-track > .progress-width-67,
+.tool-progress-track > .progress-width-67,
+.stage-progress-track > .progress-width-67,
+.workflow-track > .workflow-fill.progress-width-67
+{
+  width: 67%;
+}
+
+.mini-progress-track > .progress-width-68,
+.tool-progress-track > .progress-width-68,
+.stage-progress-track > .progress-width-68,
+.workflow-track > .workflow-fill.progress-width-68
+{
+  width: 68%;
+}
+
+.mini-progress-track > .progress-width-69,
+.tool-progress-track > .progress-width-69,
+.stage-progress-track > .progress-width-69,
+.workflow-track > .workflow-fill.progress-width-69
+{
+  width: 69%;
+}
+
+.mini-progress-track > .progress-width-70,
+.tool-progress-track > .progress-width-70,
+.stage-progress-track > .progress-width-70,
+.workflow-track > .workflow-fill.progress-width-70
+{
+  width: 70%;
+}
+
+.mini-progress-track > .progress-width-71,
+.tool-progress-track > .progress-width-71,
+.stage-progress-track > .progress-width-71,
+.workflow-track > .workflow-fill.progress-width-71
+{
+  width: 71%;
+}
+
+.mini-progress-track > .progress-width-72,
+.tool-progress-track > .progress-width-72,
+.stage-progress-track > .progress-width-72,
+.workflow-track > .workflow-fill.progress-width-72
+{
+  width: 72%;
+}
+
+.mini-progress-track > .progress-width-73,
+.tool-progress-track > .progress-width-73,
+.stage-progress-track > .progress-width-73,
+.workflow-track > .workflow-fill.progress-width-73
+{
+  width: 73%;
+}
+
+.mini-progress-track > .progress-width-74,
+.tool-progress-track > .progress-width-74,
+.stage-progress-track > .progress-width-74,
+.workflow-track > .workflow-fill.progress-width-74
+{
+  width: 74%;
+}
+
+.mini-progress-track > .progress-width-75,
+.tool-progress-track > .progress-width-75,
+.stage-progress-track > .progress-width-75,
+.workflow-track > .workflow-fill.progress-width-75
+{
+  width: 75%;
+}
+
+.mini-progress-track > .progress-width-76,
+.tool-progress-track > .progress-width-76,
+.stage-progress-track > .progress-width-76,
+.workflow-track > .workflow-fill.progress-width-76
+{
+  width: 76%;
+}
+
+.mini-progress-track > .progress-width-77,
+.tool-progress-track > .progress-width-77,
+.stage-progress-track > .progress-width-77,
+.workflow-track > .workflow-fill.progress-width-77
+{
+  width: 77%;
+}
+
+.mini-progress-track > .progress-width-78,
+.tool-progress-track > .progress-width-78,
+.stage-progress-track > .progress-width-78,
+.workflow-track > .workflow-fill.progress-width-78
+{
+  width: 78%;
+}
+
+.mini-progress-track > .progress-width-79,
+.tool-progress-track > .progress-width-79,
+.stage-progress-track > .progress-width-79,
+.workflow-track > .workflow-fill.progress-width-79
+{
+  width: 79%;
+}
+
+.mini-progress-track > .progress-width-80,
+.tool-progress-track > .progress-width-80,
+.stage-progress-track > .progress-width-80,
+.workflow-track > .workflow-fill.progress-width-80
+{
+  width: 80%;
+}
+
+.mini-progress-track > .progress-width-81,
+.tool-progress-track > .progress-width-81,
+.stage-progress-track > .progress-width-81,
+.workflow-track > .workflow-fill.progress-width-81
+{
+  width: 81%;
+}
+
+.mini-progress-track > .progress-width-82,
+.tool-progress-track > .progress-width-82,
+.stage-progress-track > .progress-width-82,
+.workflow-track > .workflow-fill.progress-width-82
+{
+  width: 82%;
+}
+
+.mini-progress-track > .progress-width-83,
+.tool-progress-track > .progress-width-83,
+.stage-progress-track > .progress-width-83,
+.workflow-track > .workflow-fill.progress-width-83
+{
+  width: 83%;
+}
+
+.mini-progress-track > .progress-width-84,
+.tool-progress-track > .progress-width-84,
+.stage-progress-track > .progress-width-84,
+.workflow-track > .workflow-fill.progress-width-84
+{
+  width: 84%;
+}
+
+.mini-progress-track > .progress-width-85,
+.tool-progress-track > .progress-width-85,
+.stage-progress-track > .progress-width-85,
+.workflow-track > .workflow-fill.progress-width-85
+{
+  width: 85%;
+}
+
+.mini-progress-track > .progress-width-86,
+.tool-progress-track > .progress-width-86,
+.stage-progress-track > .progress-width-86,
+.workflow-track > .workflow-fill.progress-width-86
+{
+  width: 86%;
+}
+
+.mini-progress-track > .progress-width-87,
+.tool-progress-track > .progress-width-87,
+.stage-progress-track > .progress-width-87,
+.workflow-track > .workflow-fill.progress-width-87
+{
+  width: 87%;
+}
+
+.mini-progress-track > .progress-width-88,
+.tool-progress-track > .progress-width-88,
+.stage-progress-track > .progress-width-88,
+.workflow-track > .workflow-fill.progress-width-88
+{
+  width: 88%;
+}
+
+.mini-progress-track > .progress-width-89,
+.tool-progress-track > .progress-width-89,
+.stage-progress-track > .progress-width-89,
+.workflow-track > .workflow-fill.progress-width-89
+{
+  width: 89%;
+}
+
+.mini-progress-track > .progress-width-90,
+.tool-progress-track > .progress-width-90,
+.stage-progress-track > .progress-width-90,
+.workflow-track > .workflow-fill.progress-width-90
+{
+  width: 90%;
+}
+
+.mini-progress-track > .progress-width-91,
+.tool-progress-track > .progress-width-91,
+.stage-progress-track > .progress-width-91,
+.workflow-track > .workflow-fill.progress-width-91
+{
+  width: 91%;
+}
+
+.mini-progress-track > .progress-width-92,
+.tool-progress-track > .progress-width-92,
+.stage-progress-track > .progress-width-92,
+.workflow-track > .workflow-fill.progress-width-92
+{
+  width: 92%;
+}
+
+.mini-progress-track > .progress-width-93,
+.tool-progress-track > .progress-width-93,
+.stage-progress-track > .progress-width-93,
+.workflow-track > .workflow-fill.progress-width-93
+{
+  width: 93%;
+}
+
+.mini-progress-track > .progress-width-94,
+.tool-progress-track > .progress-width-94,
+.stage-progress-track > .progress-width-94,
+.workflow-track > .workflow-fill.progress-width-94
+{
+  width: 94%;
+}
+
+.mini-progress-track > .progress-width-95,
+.tool-progress-track > .progress-width-95,
+.stage-progress-track > .progress-width-95,
+.workflow-track > .workflow-fill.progress-width-95
+{
+  width: 95%;
+}
+
+.mini-progress-track > .progress-width-96,
+.tool-progress-track > .progress-width-96,
+.stage-progress-track > .progress-width-96,
+.workflow-track > .workflow-fill.progress-width-96
+{
+  width: 96%;
+}
+
+.mini-progress-track > .progress-width-97,
+.tool-progress-track > .progress-width-97,
+.stage-progress-track > .progress-width-97,
+.workflow-track > .workflow-fill.progress-width-97
+{
+  width: 97%;
+}
+
+.mini-progress-track > .progress-width-98,
+.tool-progress-track > .progress-width-98,
+.stage-progress-track > .progress-width-98,
+.workflow-track > .workflow-fill.progress-width-98
+{
+  width: 98%;
+}
+
+.mini-progress-track > .progress-width-99,
+.tool-progress-track > .progress-width-99,
+.stage-progress-track > .progress-width-99,
+.workflow-track > .workflow-fill.progress-width-99
+{
+  width: 99%;
+}
+
+.mini-progress-track > .progress-width-100,
+.tool-progress-track > .progress-width-100,
+.stage-progress-track > .progress-width-100,
+.workflow-track > .workflow-fill.progress-width-100
+{
+  width: 100%;
+}

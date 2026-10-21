@@ -1,0 +1,19 @@
+{
+  "sslyze_version": "6.3.1",
+  "server_scan_results": [
+    {
+      "server_location": {
+        "hostname": "lab-target",
+        "port": 443,
+        "connection_type": "DIRECT",
+        "ip_address": "127.0.0.1",
+        "http_proxy_settings": null
+      },
+      "connectivity_status": "ERROR",
+      "connectivity_error_trace": "local deterministic fixture: TLS service unavailable",
+      "connectivity_result": null,
+      "scan_status": "ERROR_NO_CONNECTIVITY",
+      "scan_result": null
+    }
+  ]
+}

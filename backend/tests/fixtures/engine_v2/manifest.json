@@ -1,0 +1,45 @@
+{
+  "fixture_version": "engine-v2-local-lab-v1",
+  "target": {
+    "hostname": "lab-target",
+    "ip": "127.0.0.1",
+    "http_port": 80
+  },
+  "engines": {
+    "nmap": {
+      "fixture": "nmap.xml",
+      "sanitized": true,
+      "deterministic": true
+    },
+    "httpx": {
+      "fixture": "httpx.jsonl",
+      "sanitized": true,
+      "deterministic": true
+    },
+    "katana": {
+      "fixture": "katana.jsonl",
+      "sanitized": true,
+      "deterministic": true
+    },
+    "sslyze": {
+      "fixture": "sslyze.json",
+      "sanitized": true,
+      "deterministic": true
+    },
+    "nuclei": {
+      "fixture": "nuclei.jsonl",
+      "sanitized": true,
+      "deterministic": true
+    },
+    "zap": {
+      "fixture": "zap.json",
+      "sanitized": true,
+      "deterministic": true
+    },
+    "nikto": {
+      "fixture": "nikto.json",
+      "sanitized": true,
+      "deterministic": true
+    }
+  }
+}

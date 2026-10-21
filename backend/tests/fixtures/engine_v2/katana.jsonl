@@ -1,0 +1,2 @@
+{"timestamp":"2026-09-02T08:00:01Z","request":{"method":"GET","endpoint":"http://lab-target/","source":"http://lab-target/"}}
+{"timestamp":"2026-09-02T08:00:02Z","request":{"method":"GET","endpoint":"http://lab-target/search?q=beacon","source":"http://lab-target/"}}

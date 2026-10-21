@@ -1,0 +1,1 @@
+{"template":"http/misconfiguration/beacon-lab-header.yaml","template-id":"beacon-lab-header","info":{"name":"BEACON Local Lab Header Observation","severity":"low","tags":["misconfig","beacon-lab"]},"matcher-name":"header-missing","type":"http","host":"http://lab-target","matched-at":"http://lab-target/","ip":"127.0.0.1","timestamp":"2026-09-02T08:00:03Z"}

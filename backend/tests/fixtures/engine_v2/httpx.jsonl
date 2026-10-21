@@ -1,0 +1,1 @@
+{"timestamp":"2026-09-02T08:00:00Z","url":"http://lab-target:80","input":"lab-target:80","scheme":"http","host":"lab-target","port":"80","status_code":200,"title":"BEACON Local Lab","webserver":"nginx","content_type":"text/html","tech":["nginx"]}

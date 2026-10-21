@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<nmaprun scanner="nmap" version="7.95">
+  <host>
+    <status state="up" reason="localhost-response"/>
+    <address addr="127.0.0.1" addrtype="ipv4"/>
+    <hostnames>
+      <hostname name="lab-target" type="user"/>
+    </hostnames>
+    <ports>
+      <port protocol="tcp" portid="80">
+        <state state="open" reason="syn-ack"/>
+        <service
+          name="http"
+          product="nginx"
+          version="1.27"
+          tunnel=""
+        />
+      </port>
+    </ports>
+  </host>
+  <runstats>
+    <finished time="1788336000" elapsed="0.10"/>
+    <hosts up="1" down="0" total="1"/>
+  </runstats>
+</nmaprun>

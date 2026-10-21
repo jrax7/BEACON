@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="115" fill="#0a0608"/>
+
+  <!-- Subtle warm radial glow behind shield -->
+  <ellipse cx="256" cy="240" rx="180" ry="195" fill="#c02236" opacity="0.045"/>
+
+  <!-- Shield outer body -->
+  <path d="M256 56 L404 115 L404 256 C404 348 338 404 256 435 C174 404 108 348 108 256 L108 115 Z"
+        fill="#150608" stroke="#c02236" stroke-width="7" stroke-linejoin="round"/>
+
+  <!-- Shield inner bevel 1 -->
+  <path d="M256 76 L384 130 L384 256 C384 338 324 390 256 418 C188 390 128 338 128 256 L128 130 Z"
+        fill="none" stroke="#e8394f" stroke-width="2.2" stroke-linejoin="round" opacity="0.28"/>
+
+  <!-- Shield inner bevel 2 -->
+  <path d="M256 96 L364 146 L364 256 C364 328 310 376 256 401 C202 376 148 328 148 256 L148 146 Z"
+        fill="none" stroke="#c02236" stroke-width="1.2" stroke-linejoin="round" opacity="0.18"/>
+
+  <!-- Scan line 1 -->
+  <line x1="120" y1="210" x2="392" y2="210" stroke="#e8394f" stroke-width="1.8" stroke-dasharray="12 9" opacity="0.28"/>
+  <!-- Scan line 2 -->
+  <line x1="126" y1="256" x2="386" y2="256" stroke="#e8394f" stroke-width="1.2" stroke-dasharray="10 11" opacity="0.15"/>
+
+  <!-- Keyhole outer ring -->
+  <circle cx="256" cy="232" r="52" fill="#0a0608" stroke="#c02236" stroke-width="7"/>
+  <!-- Keyhole inner highlight ring -->
+  <circle cx="256" cy="232" r="38" fill="none" stroke="#e8394f" stroke-width="2" opacity="0.38"/>
+
+  <!-- Keyhole stem -->
+  <path d="M234 278 L234 332 Q234 342 244 342 L268 342 Q278 342 278 332 L278 278 Z" fill="#c02236"/>
+  <!-- Stem highlight -->
+  <rect x="237" y="281" width="10" height="48" rx="3" fill="#e8394f" opacity="0.32"/>
+
+  <!-- Corner node — top left -->
+  <circle cx="108" cy="115" r="12" fill="#0a0608" stroke="#c02236" stroke-width="3.5"/>
+  <circle cx="108" cy="115" r="5" fill="#e8394f"/>
+
+  <!-- Corner node — top right -->
+  <circle cx="404" cy="115" r="12" fill="#0a0608" stroke="#c02236" stroke-width="3.5"/>
+  <circle cx="404" cy="115" r="5" fill="#e8394f"/>
+
+  <!-- Corner node — bottom -->
+  <circle cx="256" cy="435" r="12" fill="#0a0608" stroke="#c02236" stroke-width="3.5"/>
+  <circle cx="256" cy="435" r="5" fill="#e8394f"/>
+
+  <!-- Connector lines from corner nodes along shield edge -->
+  <line x1="108" y1="115" x2="130" y2="125" stroke="#c02236" stroke-width="2.5" opacity="0.5"/>
+  <line x1="404" y1="115" x2="382" y2="125" stroke="#c02236" stroke-width="2.5" opacity="0.5"/>
+  <line x1="256" y1="435" x2="256" y2="418" stroke="#c02236" stroke-width="2.5" opacity="0.5"/>
+
+  <!-- Tick marks along shield top edge -->
+  <line x1="200" y1="91" x2="205" y2="99" stroke="#e8394f" stroke-width="2" opacity="0.4" stroke-linecap="round"/>
+  <line x1="220" y1="81" x2="225" y2="89" stroke="#e8394f" stroke-width="2" opacity="0.4" stroke-linecap="round"/>
+  <line x1="292" y1="81" x2="287" y2="89" stroke="#e8394f" stroke-width="2" opacity="0.4" stroke-linecap="round"/>
+  <line x1="312" y1="91" x2="307" y2="99" stroke="#e8394f" stroke-width="2" opacity="0.4" stroke-linecap="round"/>
+</svg>

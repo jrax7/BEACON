@@ -1,0 +1,40 @@
+/* Animations */
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes cursorBlink {
+  50% { opacity: 0; }
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 0.55; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes barPulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+@keyframes scanlineMove {
+  0% { transform: translateY(0); opacity: 0; }
+  8% { opacity: 0.4; }
+  92% { opacity: 0.4; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+@keyframes shieldBreathe {
+  0%, 100% { filter: drop-shadow(0 0 10px rgba(192, 34, 54, 0.16)); }
+  50% { filter: drop-shadow(0 0 22px rgba(232, 57, 79, 0.32)); }
+}
+
+@keyframes orbitPulse {
+  0%, 100% { transform: scale(0.98); opacity: 0.72; }
+  50% { transform: scale(1.02); opacity: 1; }
+}
+
+@keyframes slowSpin {
+  to { transform: rotate(360deg); }
+}

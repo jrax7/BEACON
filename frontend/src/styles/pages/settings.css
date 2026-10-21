@@ -1,0 +1,164 @@
+.settings-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(300px, 0.9fr);
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.settings-details {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; margin: 0; overflow: hidden;
+  border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--border-subtle);
+}
+.settings-details > div { min-width: 0; padding: var(--space-4); background: var(--surface-workspace); }
+.settings-details dt { margin-bottom: var(--space-2); color: var(--text-tertiary); font-family: var(--font-mono); font-size: var(--text-size-caption); letter-spacing: .08em; text-transform: uppercase; }
+.settings-details dd { margin: 0; color: var(--text-secondary); font-size: var(--text-size-body-small); overflow-wrap: anywhere; }
+.settings-role-help { margin: var(--space-3) 0 0; color: var(--text-tertiary); font-size: var(--text-size-body-small); line-height: var(--line-height-body); }
+.settings-role-help strong { color: var(--text-secondary); }
+.settings-form { display: grid; gap: var(--space-3); margin-top: var(--space-4); }
+.settings-form .primary-button, .settings-form .secondary-button { width: auto; justify-self: start; }
+
+.settings-member-list { display: grid; gap: var(--space-2); }
+.settings-member-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: var(--space-3); min-width: 0; padding: var(--space-3); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); background: var(--surface-workspace); }
+.settings-member-avatar { display: grid; width: 40px; height: 40px; place-items: center; border: 1px solid var(--border-emphasis); border-radius: var(--radius-sm); background: var(--brand-soft); color: var(--brand-hover); font-family: var(--font-mono); font-size: var(--text-size-caption); font-weight: var(--font-weight-bold); }
+.settings-member-identity { min-width: 0; }
+.settings-member-identity strong { display: block; overflow: hidden; color: var(--text-primary); font-size: var(--text-size-body-small); text-overflow: ellipsis; white-space: nowrap; }
+.settings-member-email { margin: .2rem 0 0; overflow: hidden; color: var(--text-tertiary); font-size: var(--text-size-caption); text-overflow: ellipsis; white-space: nowrap; }
+.settings-member-actions, .settings-invitation-actions { display: flex; align-items: center; justify-content: flex-end; gap: var(--space-2); }
+.settings-role-select { min-width: 126px; }
+.settings-invite-form { grid-template-columns: minmax(0, 1fr) minmax(150px, .4fr) auto; align-items: end; }
+.settings-invite-form .primary-button { min-height: var(--control-height-md); }
+
+.settings-invitation-list {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+.settings-invitation-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--space-3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background:
+    linear-gradient(100deg, rgba(192, 34, 54, 0.055), transparent 48%),
+    var(--surface-workspace);
+}
+
+.settings-invitation-mark {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border: 1px solid rgba(232, 57, 79, 0.22);
+  border-radius: var(--radius-sm);
+  background: var(--brand-soft);
+  color: var(--brand-hover);
+  font-family: var(--font-mono);
+  font-size: var(--text-size-body-small);
+  font-weight: var(--font-weight-bold);
+}
+
+.settings-invitation-copy {
+  min-width: 0;
+  display: grid;
+  gap: 0.42rem;
+}
+
+.settings-invitation-copy > strong {
+  overflow: hidden;
+  color: var(--text-primary);
+  font-size: var(--text-size-body-small);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.settings-invitation-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.settings-invitation-meta > span:not(.status-badge) {
+  overflow: hidden;
+  color: var(--text-tertiary);
+  font-family: var(--font-mono);
+  font-size: var(--text-size-caption);
+  text-overflow: ellipsis;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.settings-pending-badge {
+  border-color: rgba(245, 158, 11, 0.24);
+  background: rgba(245, 158, 11, 0.07);
+  color: var(--warning);
+}
+
+.settings-session-state {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: 0.2rem 0;
+}
+
+.settings-session-dot {
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  margin-top: 0.28rem;
+  border-radius: 50%;
+  background: #63c174;
+  box-shadow:
+    0 0 0 4px rgba(99, 193, 116, 0.08);
+}
+
+.settings-session-state > div {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.settings-session-state strong {
+  color: var(--text);
+  font-size: 0.78rem;
+}
+
+.settings-session-state p {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  line-height: 1.65;
+}
+
+.settings-session-state p span {
+  color: var(--text-soft);
+}
+
+
+@media (max-width: 980px) {
+  .settings-layout { grid-template-columns: 1fr; }
+  .settings-invite-form { grid-template-columns: minmax(0, 1fr) 180px; }
+  .settings-invite-form .primary-button { grid-column: 1 / -1; }
+}
+
+@media (max-width: 560px) {
+  .settings-details { grid-template-columns: 1fr; }
+  .settings-member-row { grid-template-columns: auto minmax(0, 1fr); align-items: start; }
+  .settings-member-actions { grid-column: 1 / -1; justify-content: stretch; }
+  .settings-member-actions .ui-select { flex: 1 1 auto; }
+  .settings-invite-form { grid-template-columns: 1fr; }
+  .settings-invite-form .primary-button { width: 100%; }
+  .settings-invitation-row { grid-template-columns: auto minmax(0, 1fr); align-items: start; }
+  .settings-invitation-actions { grid-column: 1 / -1; justify-content: flex-start; flex-wrap: wrap; }
+}
+
+.settings-access-note {
+  margin: 0 0 var(--space-3);
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: var(--line-relaxed);
+}

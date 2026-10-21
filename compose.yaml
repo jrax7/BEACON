@@ -1,0 +1,301 @@
+name: beacon
+
+services:
+  postgres:
+    image: postgres:17-alpine@sha256:18cfe3ef5e6815560c98237d6216d1e5119702fb0f3894c8785dd58b8bbe5d73
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+    networks:
+      - beacon_backend
+
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+
+  redis:
+    image: redis:7-alpine@sha256:ff02b58f971e7d7d156a1267e283fcbbeee91773b6aa36c49dac28ecfe28eadf
+    restart: unless-stopped
+
+    command:
+      [
+        "redis-server",
+        "--appendonly",
+        "yes"
+      ]
+
+    volumes:
+      - redis_data:/data
+
+    networks:
+      - beacon_backend
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "redis-cli",
+          "ping"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      args:
+        BEACON_VERSION: "${BEACON_VERSION:-development}"
+        BEACON_REVISION: "${BEACON_REVISION:-unknown}"
+
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+      redis:
+        condition: service_healthy
+
+    ports:
+      - "127.0.0.1:8000:8000"
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3).read()"
+        ]
+      interval: 5s
+      timeout: 4s
+      retries: 12
+      start_period: 10s
+
+    volumes:
+      - reports_data:/app/storage/reports
+      - scan_raw_data:/app/storage/raw
+
+    networks:
+      - beacon_backend
+      - beacon_scanner
+
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+
+      args:
+        BEACON_VERSION: "${BEACON_VERSION:-development}"
+        BEACON_REVISION: "${BEACON_REVISION:-unknown}"
+        VITE_TURNSTILE_SITE_KEY: "${VITE_TURNSTILE_SITE_KEY:-}"
+    restart: unless-stopped
+
+    depends_on:
+      backend:
+        condition: service_healthy
+
+    ports:
+      - "127.0.0.1:5173:80"
+
+    networks:
+      - beacon_backend
+
+
+  control-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.worker
+      args:
+        BEACON_VERSION: "${BEACON_VERSION:-development}"
+        BEACON_REVISION: "${BEACON_REVISION:-unknown}"
+
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+      redis:
+        condition: service_healthy
+
+      zap:
+        condition: service_started
+
+    volumes:
+      - reports_data:/app/storage/reports
+      - scan_raw_data:/app/storage/raw
+
+    networks:
+      - beacon_backend
+      - beacon_scanner
+    command:
+      - celery
+      - -A
+      - app.celery_app:celery_app
+      - worker
+      - --loglevel=INFO
+      - --queues=control,report
+      - --concurrency=${CONTROL_WORKER_CONCURRENCY:-1}
+    cpus: "${CONTROL_WORKER_CPU_LIMIT:-0.50}"
+    mem_limit: "${CONTROL_WORKER_MEMORY_LIMIT:-384m}"
+    pids_limit: ${CONTROL_WORKER_PIDS_LIMIT:-128}
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+
+  scanner-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.worker
+      args:
+        BEACON_VERSION: "${BEACON_VERSION:-development}"
+        BEACON_REVISION: "${BEACON_REVISION:-unknown}"
+
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+      redis:
+        condition: service_healthy
+
+      zap:
+        condition: service_started
+
+    volumes:
+      - reports_data:/app/storage/reports
+      - scan_raw_data:/app/storage/raw
+
+    networks:
+      - beacon_backend
+      - beacon_scanner
+    command:
+      - celery
+      - -A
+      - app.celery_app:celery_app
+      - worker
+      - --loglevel=INFO
+      - --queues=scanner
+      - --concurrency=${SCANNER_WORKER_CONCURRENCY:-1}
+    cpus: "${SCANNER_WORKER_CPU_LIMIT:-1.25}"
+    mem_limit: "${SCANNER_WORKER_MEMORY_LIMIT:-1536m}"
+    pids_limit: ${SCANNER_WORKER_PIDS_LIMIT:-256}
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+  juice-shop:
+    image: bkimminich/juice-shop:latest@sha256:73c53fbf442e8337b3ea3d98c7e8550308854701ebdfce4cc39768f36b75430e
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:3000:3000"
+
+    networks:
+      - beacon_scanner
+
+
+  lab-target:
+    image: nginx:alpine@sha256:db35bfc6b2951e7f8a72db5db120288c127ffaeeb4a6d4b95a26fead017d5913
+    restart: unless-stopped
+
+    depends_on:
+      - juice-shop
+
+    ports:
+      - "127.0.0.1:3001:80"
+
+    volumes:
+      - ./infrastructure/lab-target/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./storage/lab-verification:/verification:ro
+
+    networks:
+      - beacon_scanner
+
+
+  zap:
+    image: ghcr.io/zaproxy/zaproxy:stable@sha256:781a2bdaea47324e7bab583e2263f21d257b0aee61ed51521a5be45f5f5081ef
+    restart: unless-stopped
+
+    command:
+      [
+        "zap.sh",
+        "-daemon",
+        "-host",
+        "0.0.0.0",
+        "-port",
+        "8080",
+        "-config",
+        "api.addrs.addr.name=.*",
+        "-config",
+        "api.addrs.addr.regex=true",
+        "-config",
+        "api.key=${ZAP_API_KEY}"
+      ]
+
+    shm_size: "1gb"
+
+    networks:
+      - beacon_scanner
+    cpus: "${ZAP_CPU_LIMIT:-0.75}"
+    mem_limit: "${ZAP_MEMORY_LIMIT:-1280m}"
+    pids_limit: ${ZAP_PIDS_LIMIT:-256}
+    init: true
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+volumes:
+  postgres_data:
+    name: beacon_postgres_data
+
+  redis_data:
+    name: beacon_redis_data
+
+
+  reports_data:
+    name: beacon_reports_data
+
+  scan_raw_data:
+    name: beacon_scan_raw_data
+
+networks:
+  beacon_backend:
+    name: beacon_backend
+
+  beacon_scanner:
+    name: beacon_scanner

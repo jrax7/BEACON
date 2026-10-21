@@ -1,0 +1,18 @@
+[
+  {
+    "pluginId": "10021",
+    "alert": "X-Content-Type-Options Header Missing",
+    "risk": "Low",
+    "confidence": "Medium",
+    "url": "http://lab-target/",
+    "method": "GET",
+    "param": "",
+    "evidence": "",
+    "description": "The response is missing a security header.",
+    "solution": "Set the X-Content-Type-Options header.",
+    "reference": "https://www.zaproxy.org/",
+    "cweid": "693",
+    "wascid": "15",
+    "sourceid": "3"
+  }
+]

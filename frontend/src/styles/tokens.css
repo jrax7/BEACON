@@ -1,0 +1,136 @@
+#root {
+  min-height: 100vh;
+}
+
+:root {
+  --bg: #0a0608;
+  --bg-soft: #10090c;
+  --bg-raised: #150c10;
+  --card: rgba(24, 13, 17, 0.84);
+  --card-solid: #180d11;
+  --card-hover: #1d1015;
+  --border: rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(192, 34, 54, 0.3);
+  --accent: #c02236;
+  --accent-bright: #e8394f;
+  --accent-dark: #7e1020;
+  --accent-dim: rgba(192, 34, 54, 0.1);
+  --accent-glow: rgba(232, 57, 79, 0.2);
+  --text: #f5eef0;
+  --text-soft: #cbbcc0;
+  --text-muted: #a78f96;
+  --text-faint: #8d747b;
+  --success: #34d399;
+  --warning: #fbbf24;
+  --danger: #fb7185;
+  --info: #60a5fa;
+  --mono: var(--font-mono);
+  --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
+
+  /* Spacing scale — used by newly added/reused components (Card, PageHeader,
+     ConfirmDialog, etc.) so spacing stays consistent as the UI grows. */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-8: 3rem;
+
+  /* Radius scale */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  /* Elevation, layered above --shadow for smaller floating surfaces */
+  --shadow-sm: 0 8px 24px rgba(0, 0, 0, 0.24);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.5);
+
+  /* z-index scale, so overlays (mobile nav, dialogs) never fight each other */
+  --z-mobile-nav: 40;
+  --z-dialog: 100;
+
+  /* Final visual system semantic tokens. Legacy tokens remain as compatibility aliases. */
+  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --text-size-page-title: clamp(2rem, 3vw, 3rem);
+  --text-size-section-title: 1.125rem;
+  --text-size-card-title: 1rem;
+  --text-size-body: 0.9375rem;
+  --text-size-body-small: 0.8125rem;
+  --text-size-control: 0.875rem;
+  --text-size-label: 0.75rem;
+  --text-size-caption: 0.6875rem;
+  --line-height-heading: 1.15;
+  --line-height-body: 1.6;
+
+  --surface-app: var(--bg);
+  --surface-workspace: var(--bg-soft);
+  --surface-card: var(--card);
+  --surface-card-hover: var(--card-hover);
+  --border-subtle: var(--border);
+  --border-standard: rgba(255, 255, 255, 0.11);
+  --border-emphasis: var(--border-strong);
+  --text-primary: var(--text);
+  --text-secondary: var(--text-soft);
+  --text-tertiary: var(--text-muted);
+  --brand-primary: var(--accent);
+  --brand-hover: var(--accent-bright);
+  --brand-active: var(--accent-dark);
+  --brand-soft: var(--accent-dim);
+  --severity-critical: #fb7185;
+  --severity-high: #f97373;
+  --severity-medium: #fbbf24;
+  --severity-low: #60a5fa;
+  --severity-info: #94a3b8;
+
+  --control-height-md: 44px;
+  --z-sticky: 20;
+  --z-nav: 40;
+  --z-dropdown: 60;
+  --z-progress: 70;
+  --z-tooltip: 80;
+  --z-modal-backdrop: 90;
+  --z-modal: 100;
+  --z-toast: 110;
+}
+
+body {
+  color: var(--text);
+  background:
+    radial-gradient(circle at 20% -10%, rgba(192, 34, 54, 0.12), transparent 31rem),
+    radial-gradient(circle at 90% 14%, rgba(126, 16, 32, 0.08), transparent 28rem),
+    var(--bg);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  opacity: 0.38;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(to bottom, black, transparent 90%);
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(1px 1px at 12% 16%, rgba(255, 255, 255, 0.18), transparent),
+    radial-gradient(1px 1px at 32% 72%, rgba(255, 255, 255, 0.1), transparent),
+    radial-gradient(1px 1px at 64% 24%, rgba(255, 180, 190, 0.12), transparent),
+    radial-gradient(1px 1px at 86% 66%, rgba(255, 255, 255, 0.12), transparent),
+    radial-gradient(1px 1px at 54% 88%, rgba(255, 180, 190, 0.08), transparent);
+}

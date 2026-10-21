@@ -1,0 +1,1 @@
+"""BEACON authentication domain package."""

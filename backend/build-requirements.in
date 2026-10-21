@@ -1,0 +1,4 @@
+# Build tooling used for the deterministic SSLyze source build.
+pip==26.2.1
+setuptools==84.0.0
+wheel==0.48.0

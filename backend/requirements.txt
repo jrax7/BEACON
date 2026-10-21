@@ -1,0 +1,24 @@
+fastapi>=0.116,<1.0
+uvicorn[standard]>=0.35,<1.0
+sqlalchemy>=2.0,<3.0
+psycopg[binary]>=3.2,<4.0
+pydantic-settings>=2.10,<3.0
+redis>=6.0,<8.0
+celery[redis]>=5.6,<6.0
+alembic>=1.18,<2.0
+pwdlib[argon2]>=0.3,<1.0
+PyJWT>=2.10,<3.0
+python-multipart>=0.0.20,<1.0
+email-validator>=2.2,<3.0
+httpx>=0.28,<1.0
+dnspython>=2.7,<3.0
+Jinja2>=3.1,<4.0
+weasyprint>=70,<71
+defusedxml>=0.7,<1.0
+
+# SSLyze 6.3.1 runtime dependencies. The package itself is installed by
+# install_dependencies.py with the upstream cryptography <51 metadata fix.
+cryptography>=50.0.1,<51
+nassl>=5.4,<6
+tls-parser>=2,<3
+pydantic>=2.3,<3

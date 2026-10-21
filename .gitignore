@@ -1,0 +1,69 @@
+# Secrets and environment variables
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.venv/
+
+# Frontend
+node_modules/
+dist/
+build/
+
+# Generated security results
+storage/raw/*
+storage/reports/*
+storage/zap/*
+
+# Keep empty directories
+!storage/raw/.gitkeep
+!storage/reports/.gitkeep
+!storage/zap/.gitkeep
+
+# Logs and editors
+*.log
+.vscode/
+.idea/
+.DS_Store
+
+# Local development credentials
+.dev-admin-password
+
+# Local ownership-verification token
+storage/lab-verification/*
+!storage/lab-verification/.gitkeep
+
+# Generated BEACON reports
+storage/reports/*
+!storage/reports/.gitkeep
+
+# Patch/reject artifacts
+*.rej
+*.orig
+
+# Local Git worktrees
+.worktrees/
+
+# Publication hygiene: local exports, backups, keys, and audit output
+beacon-endpoints.json
+openapi-live.json
+backups/
+*.dump
+*.sql
+*.sqlite
+*.sqlite3
+*.db
+*.pem
+*.key
+*.p12
+*.pfx
+*.pcap
+*.pcapng
+.gitleaks-report*.json
+publication-audit*.json

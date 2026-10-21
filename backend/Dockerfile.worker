@@ -1,0 +1,235 @@
+FROM python:3.12-slim@sha256:78387bc3881b8273120a12ebe6c1ab22b018ccc2c9adf565ae1ac9b536e184ea
+
+ARG DEBIAN_SNAPSHOT=20260824T000000Z
+
+ARG NIKTO_VERSION=2.6.0
+ARG HTTPX_VERSION=1.8.1
+ARG HTTPX_AMD64_SHA256=fe21117f19886b9b5f66ed6445e296993371be25641ecf0a43947a788b2714bf
+ARG HTTPX_ARM64_SHA256=3a8c495fa7b6d95bfc484796368c055766dd701d21c721ff8b1fb54ca5dea6e6
+ARG KATANA_VERSION=1.7.0
+ARG KATANA_AMD64_SHA256=fe1142d92f418549338ea46d67a472124878482e225d279e9a42700c75d76a4d
+ARG KATANA_ARM64_SHA256=9a6885fe9fda850129b110e0f079d42529b0693dd81b59c316f04084935300f0
+ARG NIKTO_SHA256=656554f9aeba8c462689582b59d141369dbcadac11141cd02752887f363430ec
+ARG NUCLEI_VERSION=3.11.1
+ARG NUCLEI_AMD64_SHA256=ea63d4ae232808cd7c6bc00d0142428e231fab59dae01042246097d195835ab6
+ARG NUCLEI_ARM64_SHA256=8044e3d9768ba0a744b2872c1a87e813006f013da97ca9f50f7661a4203bec07
+ARG NUCLEI_TEMPLATES_COMMIT=83234ce456da3e90dda86dfbc5e605e64a846df3
+ARG NUCLEI_TEMPLATES_SHA256=5b22a097bf0b828377574a82b98b4ed0d1227b4aae3ff6e3bedf97272e70ccc6
+ARG TARGETARCH
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PIP_NO_CACHE_DIR=1
+ENV PATH="/opt/nikto:${PATH}"
+
+WORKDIR /app
+
+RUN sed -i \
+       -e "s|http://deb.debian.org/debian-security|https://snapshot.debian.org/archive/debian-security/${DEBIAN_SNAPSHOT}|g" \
+       -e "s|http://deb.debian.org/debian|https://snapshot.debian.org/archive/debian/${DEBIAN_SNAPSHOT}|g" \
+       /etc/apt/sources.list.d/debian.sources \
+    && printf 'Acquire::Check-Valid-Until "false";\n' \
+       > /etc/apt/apt.conf.d/99snapshot \
+    && apt-get update \
+    && apt-get install --yes --no-install-recommends \
+       ca-certificates=20250419 \
+       curl=8.14.1-2+deb13u4 \
+       fontconfig=2.15.0-2.3 \
+       fonts-dejavu-core=2.37-8 \
+       libharfbuzz-subset0=10.2.0-1+deb13u1 \
+       libio-socket-ssl-perl=2.089-1 \
+       libjson-perl=4.10000-1 \
+       libnet-ssleay-perl=1.94-3 \
+       libpango-1.0-0=1.56.3-1 \
+       libpangoft2-1.0-0=1.56.3-1 \
+       libxml-libxml-perl=2.0207+dfsg+really+2.0134-5+deb13u1 \
+       libxml-writer-perl=0.900-2 \
+       nmap=7.95+dfsg-3 \
+       perl=5.40.1-6 \
+       unzip=6.0-29+deb13u1 \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN case "${TARGETARCH}" in \
+       amd64) HTTPX_SHA256="${HTTPX_AMD64_SHA256}" ;; \
+       arm64) HTTPX_SHA256="${HTTPX_ARM64_SHA256}" ;; \
+       *) echo "Unsupported httpx architecture: ${TARGETARCH}" >&2; exit 1 ;; \
+    esac \
+    && curl \
+       --fail \
+       --location \
+       --silent \
+       --show-error \
+       --retry 3 \
+       "https://github.com/projectdiscovery/httpx/releases/download/v${HTTPX_VERSION}/httpx_${HTTPX_VERSION}_linux_${TARGETARCH}.zip" \
+       --output /tmp/pd-httpx.zip \
+    && echo "${HTTPX_SHA256}  /tmp/pd-httpx.zip" \
+       | sha256sum --check --strict - \
+    && mkdir -p /tmp/pd-httpx \
+    && unzip -q \
+       /tmp/pd-httpx.zip \
+       -d /tmp/pd-httpx \
+    && install \
+       -m 0755 \
+       /tmp/pd-httpx/httpx \
+       /usr/local/bin/pd-httpx \
+    && /usr/local/bin/pd-httpx -version 2>&1 \
+       | grep -F "v${HTTPX_VERSION}" \
+    && rm -rf \
+       /tmp/pd-httpx \
+       /tmp/pd-httpx.zip
+
+RUN case "${TARGETARCH}" in \
+       amd64) KATANA_SHA256="${KATANA_AMD64_SHA256}" ;; \
+       arm64) KATANA_SHA256="${KATANA_ARM64_SHA256}" ;; \
+       *) echo "Unsupported Katana architecture: ${TARGETARCH}" >&2; exit 1 ;; \
+    esac \
+    && curl \
+       --fail \
+       --location \
+       --silent \
+       --show-error \
+       --retry 3 \
+       "https://github.com/projectdiscovery/katana/releases/download/v${KATANA_VERSION}/katana_${KATANA_VERSION}_linux_${TARGETARCH}.zip" \
+       --output /tmp/pd-katana.zip \
+    && echo "${KATANA_SHA256}  /tmp/pd-katana.zip" \
+       | sha256sum --check --strict - \
+    && mkdir -p /tmp/pd-katana \
+    && unzip -q \
+       /tmp/pd-katana.zip \
+       -d /tmp/pd-katana \
+    && install \
+       -m 0755 \
+       /tmp/pd-katana/katana \
+       /usr/local/bin/pd-katana \
+    && /usr/local/bin/pd-katana -version 2>&1 \
+       | grep -F "v${KATANA_VERSION}" \
+    && rm -rf \
+       /tmp/pd-katana \
+       /tmp/pd-katana.zip
+
+RUN case "${TARGETARCH}" in \
+       amd64) NUCLEI_SHA256="${NUCLEI_AMD64_SHA256}" ;; \
+       arm64) NUCLEI_SHA256="${NUCLEI_ARM64_SHA256}" ;; \
+       *) echo "Unsupported Nuclei architecture: ${TARGETARCH}" >&2; exit 1 ;; \
+    esac \
+    && curl \
+       --fail \
+       --location \
+       --silent \
+       --show-error \
+       --retry 3 \
+       "https://github.com/projectdiscovery/nuclei/releases/download/v${NUCLEI_VERSION}/nuclei_${NUCLEI_VERSION}_linux_${TARGETARCH}.zip" \
+       --output /tmp/pd-nuclei.zip \
+    && echo "${NUCLEI_SHA256}  /tmp/pd-nuclei.zip" \
+       | sha256sum --check --strict - \
+    && mkdir -p /tmp/pd-nuclei \
+    && unzip -q \
+       /tmp/pd-nuclei.zip \
+       -d /tmp/pd-nuclei \
+    && install \
+       -m 0755 \
+       /tmp/pd-nuclei/nuclei \
+       /usr/local/bin/pd-nuclei \
+    && /usr/local/bin/pd-nuclei -version 2>&1 \
+       | grep -F "${NUCLEI_VERSION}" \
+    && rm -rf \
+       /tmp/pd-nuclei \
+       /tmp/pd-nuclei.zip
+
+RUN curl \
+       --fail \
+       --location \
+       --silent \
+       --show-error \
+       --retry 3 \
+       "https://github.com/projectdiscovery/nuclei-templates/archive/${NUCLEI_TEMPLATES_COMMIT}.tar.gz" \
+       --output /tmp/nuclei-templates.tar.gz \
+    && echo "${NUCLEI_TEMPLATES_SHA256}  /tmp/nuclei-templates.tar.gz" \
+       | sha256sum --check --strict - \
+    && mkdir -p /opt/nuclei-templates \
+    && tar \
+       --extract \
+       --gzip \
+       --file /tmp/nuclei-templates.tar.gz \
+       --directory /opt/nuclei-templates \
+       --strip-components=1 \
+    && test -z "$(find /opt/nuclei-templates -type l -print -quit)" \
+    && printf '%s\n' \
+       "${NUCLEI_TEMPLATES_COMMIT}" \
+       > /opt/nuclei-templates/.beacon-source-revision \
+    && find /opt/nuclei-templates \
+       -type d \
+       -exec chmod 0555 {} + \
+    && find /opt/nuclei-templates \
+       -type f \
+       -exec chmod 0444 {} + \
+    && rm -f \
+       /tmp/nuclei-templates.tar.gz
+
+RUN mkdir -p /opt/nikto \
+    && curl \
+       --fail \
+       --location \
+       --silent \
+       --show-error \
+       --retry 3 \
+       "https://github.com/sullo/nikto/archive/refs/tags/${NIKTO_VERSION}.tar.gz" \
+       --output /tmp/nikto.tar.gz \
+    && echo "${NIKTO_SHA256}  /tmp/nikto.tar.gz" \
+       | sha256sum --check --strict - \
+    && tar \
+       --extract \
+       --gzip \
+       --file /tmp/nikto.tar.gz \
+       --directory /tmp \
+    && cp -a \
+       "/tmp/nikto-${NIKTO_VERSION}/program/." \
+       /opt/nikto/ \
+    && rm -rf \
+       "/tmp/nikto-${NIKTO_VERSION}" \
+       /tmp/nikto.tar.gz \
+    && find /opt/nikto \
+       -type d \
+       -exec chmod 0755 {} + \
+    && find /opt/nikto \
+       -type f \
+       -exec chmod 0644 {} + \
+    && chmod 0755 /opt/nikto/nikto.pl \
+    && ln -s \
+       /opt/nikto/nikto.pl \
+       /usr/local/bin/nikto
+
+RUN groupadd --system beacon \
+    && useradd \
+       --system \
+       --gid beacon \
+       --create-home \
+       beacon
+
+RUN mkdir -p \
+       /app/storage/reports \
+       /app/storage/raw \
+    && chown -R beacon:beacon /app/storage
+
+COPY requirements.txt requirements.lock build-requirements.lock install_dependencies.py /app/
+
+RUN python -m pip install --require-hashes --requirement /app/build-requirements.lock \
+    && python /app/install_dependencies.py \
+    && rm /app/install_dependencies.py
+
+COPY --chown=beacon:beacon app /app/app
+
+ARG BEACON_VERSION=development
+ARG BEACON_REVISION=unknown
+
+LABEL org.opencontainers.image.title="BEACON Worker" \
+      org.opencontainers.image.version="${BEACON_VERSION}" \
+      org.opencontainers.image.revision="${BEACON_REVISION}"
+
+
+USER beacon
+
+CMD ["celery", "-A", "app.celery_app.celery_app", "worker", "--loglevel=INFO", "--concurrency=1"]
+
+# Allow Celery and scanner subprocesses to receive graceful termination first.
+STOPSIGNAL SIGTERM

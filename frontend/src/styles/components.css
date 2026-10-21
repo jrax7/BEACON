@@ -1,0 +1,205 @@
+/* Shared component additions introduced during the frontend cleanup.
+   Existing per-page styles remain in styles/pages/*.css; this file only
+   holds net-new reusable pieces (currently: ConfirmDialog). */
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-dialog);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: rgba(6, 3, 4, 0.72);
+  backdrop-filter: blur(6px);
+  animation: dialog-fade-in 0.15s ease;
+}
+
+.dialog-panel {
+  width: min(420px, 100%);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  background: var(--card-solid);
+  box-shadow: var(--shadow-lg);
+  animation: dialog-rise-in 0.16s ease;
+}
+
+.dialog-panel h3 {
+  margin: 0 0 var(--space-2);
+  color: var(--text);
+  font-size: 1.05rem;
+}
+
+.dialog-panel p {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 0.88rem;
+  line-height: 1.65;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.dialog-actions .primary-button,
+.dialog-actions .secondary-button,
+.dialog-actions .danger-button {
+  width: auto;
+}
+
+@keyframes dialog-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes dialog-rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+}
+
+/* Context navigation */
+
+.breadcrumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-3);
+  color: var(--text-muted);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  line-height: 1.5;
+}
+
+.breadcrumb-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.breadcrumbs a {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.16s ease;
+}
+
+.breadcrumbs a:hover {
+  color: var(--text);
+}
+
+.breadcrumb-separator {
+  color: var(--text-faint);
+}
+
+.workspace-tabs {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-5);
+  padding: var(--space-2);
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.015);
+}
+
+.workspace-tab {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 38px;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition:
+    color 0.16s ease,
+    border-color 0.16s ease,
+    background 0.16s ease;
+}
+
+.workspace-tab:hover {
+  color: var(--text);
+  border-color: var(--border);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.workspace-tab.active {
+  color: var(--text);
+  border-color: var(--border-strong);
+  background: var(--accent-dim);
+}
+
+.workspace-tab strong {
+  display: grid;
+  min-width: 20px;
+  min-height: 20px;
+  place-items: center;
+  padding: 0 0.3rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-soft);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+}
+
+.breadcrumbs a:focus-visible,
+.workspace-tab:focus-visible {
+  outline: 2px solid var(--accent-bright);
+  outline-offset: 3px;
+}
+
+
+/* Cross-application interaction system */
+.api-progress-beam {
+  position: fixed; inset: 0 0 auto; z-index: var(--z-progress); height: 2px;
+  pointer-events: none; opacity: 0; overflow: hidden;
+  background: rgba(232, 57, 79, 0.08); transition: opacity var(--motion-fast) var(--ease-standard);
+}
+.api-progress-beam::after {
+  content: ''; display: block; width: 42%; height: 100%; transform: translateX(-110%);
+  background: linear-gradient(90deg, transparent, var(--brand-hover), transparent);
+}
+.api-progress-beam.active { opacity: 1; }
+.api-progress-beam.active::after { animation: beacon-progress-scan 900ms linear infinite; }
+@keyframes beacon-progress-scan { to { transform: translateX(340%); } }
+.route-viewport { animation: beacon-route-enter var(--motion-page) var(--ease-enter) both; }
+@keyframes beacon-route-enter { from { opacity: 0; transform: translateY(5px); } }
+.toast-viewport {
+  position: fixed; right: var(--space-4); bottom: var(--space-4); z-index: var(--z-toast);
+  display: grid; width: min(360px, calc(100vw - 2rem)); gap: var(--space-2); pointer-events: none;
+}
+.toast {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--space-3);
+  padding: 0.8rem 0.9rem; border: 1px solid var(--border-standard); border-radius: var(--radius-md);
+  background: var(--card-solid); color: var(--text-primary); box-shadow: var(--shadow-sm); pointer-events: auto;
+  animation: toast-enter var(--motion-standard) var(--ease-enter) both;
+}
+.toast button { border: 0; background: transparent; color: var(--text-tertiary); cursor: pointer; }
+.toast-success { border-color: rgba(52, 211, 153, 0.28); }
+.toast-warning { border-color: rgba(251, 191, 36, 0.3); }
+.toast-error { border-color: rgba(251, 113, 133, 0.34); }
+@keyframes toast-enter { from { opacity: 0; transform: translateY(8px); } }
+.boot-sequence {
+  position: fixed; inset: 0; z-index: var(--z-modal); display: grid; place-items: center;
+  pointer-events: none; background: rgba(8, 4, 6, 0.96); animation: boot-exit 760ms var(--ease-emphasized) forwards;
+}
+@keyframes boot-exit { 0%, 65% { opacity: 1; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .route-viewport, .api-progress-beam.active::after, .toast, .boot-sequence { animation: none; }
+  .boot-sequence { display: none; }
+}
