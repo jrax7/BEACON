@@ -32,7 +32,7 @@ On a separate development host with Docker Compose, Git, and Python 3:
 5. Start services with `docker compose up -d` and check `http://localhost:5173/health`.
 6. Complete the Nuclei template approval/bootstrap work described in [release readiness](docs/public-release-readiness.md) before expecting assessments to launch.
 
-These steps describe the required setup sequence; this publication candidate has not passed a fresh-host end-to-end install. The Compose file uses fixed volume/network names and host ports: do not start a second copy alongside an existing BEACON deployment on the same Docker host.
+These steps describe the required setup sequence; this early source release has not passed a fresh-host end-to-end install. The Compose file uses fixed volume/network names and host ports: do not start a second copy alongside an existing BEACON deployment on the same Docker host.
 
 For production, follow [the production runbook](docs/production-runbook.md) and [release checklist](docs/release-checklist.md). Configure HTTPS, secure browser sessions, trusted proxies, SMTP, and Turnstile where required. Development settings are not a production configuration.
 

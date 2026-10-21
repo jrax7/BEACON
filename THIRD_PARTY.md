@@ -10,4 +10,4 @@ BEACON integrates independently maintained components. Their names identify depe
 - OWASP Juice Shop (local lab): https://owasp.org/www-project-juice-shop/
 - FastAPI, React, PostgreSQL, Redis, Celery, Nginx, WeasyPrint, and transitive dependencies are recorded in dependency manifests and build files.
 
-Before the first public release, inventory applicable licenses and required notices for the exact pinned versions. Review code, icons, fonts, templates, and container redistribution separately. This list is an inventory starting point, not a completed license compliance statement. BEACON's MIT license does not relicense third-party components.
+Before a stable packaged release, inventory applicable licenses and required notices for the exact pinned versions. Review code, icons, fonts, templates, and container redistribution separately. This list is an inventory starting point, not a completed license compliance statement. BEACON's MIT license does not relicense third-party components.
